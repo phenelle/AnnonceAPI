@@ -29,7 +29,6 @@ public class AnnonceView {
             String fieldValue = valueObject != null ? valueObject.toString() : null;
 
             System.out.println(fieldName + " = " + fieldValue);
-
         }
     }
 }

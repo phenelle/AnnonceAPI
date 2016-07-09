@@ -144,12 +144,23 @@ public class AnnonceCtrl {
     }
 
 
+    /**
+     * Publish an annonce on the server
+     *
+     * @param annonce
+     */
     public static void publish(Annonce annonce) {
 
     }
 
-    public static void getById(Long id) {
-
+    /**
+     * Return an annonce by it's unique identifier
+     *
+     * @param id
+     */
+    public static Annonce getById(Long id) {
+        Annonce annonce = new Annonce();
+        return annonce;
     }
 
 

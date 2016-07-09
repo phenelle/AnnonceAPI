@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class JsonFileUtil {
 
-
     /**
      * This method will save a list of annonce into a local json file
      *

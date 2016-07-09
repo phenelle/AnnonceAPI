@@ -16,6 +16,14 @@ import java.util.Map;
  */
 public class HTTPUtil {
 
+    /**
+     * Perform HTTP POST parameters to an url
+     *
+     * @param urlStr
+     * @param arguments
+     * @return
+     * @throws IOException
+     */
     public static String httpPost(String urlStr, Map<String, String> arguments) throws IOException {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

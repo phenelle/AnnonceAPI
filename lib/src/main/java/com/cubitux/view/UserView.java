@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
  * Created by pierre on 2016-05-19.
  */
 public class UserView {
+
     /**
      * Print user to the screen
      *
@@ -28,7 +29,6 @@ public class UserView {
             String fieldValue = valueObject != null ? valueObject.toString() : null;
 
             System.out.println(fieldName + " = " + fieldValue);
-
         }
     }
 }
