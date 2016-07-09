@@ -34,6 +34,9 @@ import com.cubitux.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -191,12 +194,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        try {
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+            return true;
+        } catch (AddressException ex) {
+        }
+        return false;
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -296,18 +303,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private final User user = new User();
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+            user.setLogin(email);
+            user.setPassword(password);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            user.setLogin(mEmail);
-            user.setPassword(mPassword);
             try {
                 UserCtrl.authenticate(user);
             } catch (Exception e) {

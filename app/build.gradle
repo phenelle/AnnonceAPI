@@ -24,5 +24,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
+    compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.5'
     compile project(':lib')
 }

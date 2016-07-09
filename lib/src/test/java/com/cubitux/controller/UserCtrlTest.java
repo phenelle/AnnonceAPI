@@ -34,8 +34,8 @@ public class UserCtrlTest extends TestCase {
     public void setUp() {
         // Create a new Annonce and populate fields
         System.out.println("@Before - setUp");
-        admin.setLogin("admin");
-        admin.setPassword("123");
+        admin.setLogin("admin@localhost");
+        admin.setPassword("12345");
 
         user.setLogin("user1");
         user.setPassword("123");
@@ -45,6 +45,7 @@ public class UserCtrlTest extends TestCase {
     public void testAuthenticate() throws Exception {
         System.out.println("@Test - testAuthenticate");
 
+        // Verify authenticate method
         UserCtrl.authenticate(admin);
         assertTrue("admin not logged", admin.isLogged());
         assertNotNull("admin has no session", admin.getSession());
@@ -62,6 +63,10 @@ public class UserCtrlTest extends TestCase {
             assertSame("Wrong exception was thrown", e.getClass(), AccountNotActivatedException.class);
         }
 
+        // Verify isAuthenticate method
+        assertTrue("user should be authenticate with this session id", UserCtrl.isAuthenticate(admin));
+
+        // Verify user is not auth if password is incorrect
         try {
             admin.setPassword("456");
             UserCtrl.authenticate(admin);
@@ -70,5 +75,9 @@ public class UserCtrlTest extends TestCase {
         }
         assertNull("session was not removed", admin.getSession());
         assertFalse("user is still logged...", admin.isLogged());
+
+
     }
+
+
 }
