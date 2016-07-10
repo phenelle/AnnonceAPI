@@ -24,10 +24,8 @@ public class DateUtil {
      * @return The string represenation of it (Ex: 2016-05-26 13:00:00)
      */
     public static String dateToString(Date input) {
-        String value = "";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        value = simpleDateFormat.format(input);
-        return value;
+        return simpleDateFormat.format(input);
     }
 
 
@@ -38,10 +36,8 @@ public class DateUtil {
      * @return A Date object
      */
     public static Date stringToDate(String input) throws ParseException {
-        Date value = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        value = simpleDateFormat.parse(input);
-        return value;
+        return simpleDateFormat.parse(input);
     }
 
 }

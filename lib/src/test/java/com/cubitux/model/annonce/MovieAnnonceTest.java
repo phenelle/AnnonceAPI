@@ -102,6 +102,6 @@ public class MovieAnnonceTest extends TestCase {
         Annonce annonce = movieAnnonce;
         JSONObject jsonObject1 = movieAnnonce.toJSON();
         JSONObject jsonObject2 = annonce.toJSON();
-
+        assertEquals("Objects are different", jsonObject1.toJSONString(), jsonObject2.toJSONString());
     }
 }

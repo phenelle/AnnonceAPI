@@ -38,24 +38,24 @@ public class JsonFileUtilTest extends TestCase {
         // Create a new Annonce and populate fields
         System.out.println("@Before - JsonFileUtilTest - setUp");
         annonce.setId(123L);
-        annonce.setPrice(new Double(100));
-        annonce.setViewed(new Long(100));
+        annonce.setPrice(Double.valueOf(100));
+        annonce.setViewed(100L);
         annonce.setTitle("Annonce Generique");
         annonce.setCategory(Category.ALL);
         annonce.setImage("image1.jpg");
         annonce.setDescription("Lorem ipsum sit dolor amet elit");
 
         movieAnnonce.setId(567L);
-        movieAnnonce.setPrice(new Double(10));
-        movieAnnonce.setViewed(new Long(5));
+        movieAnnonce.setPrice(Double.valueOf(10));
+        movieAnnonce.setViewed(5L);
         movieAnnonce.setTitle("Hunger Games");
         movieAnnonce.setCategory(Category.Movie);
         movieAnnonce.setImage("image1.jpg");
         movieAnnonce.setDescription("Lorem ipsum");
 
         vehicleAnnonce.setId(234L);
-        vehicleAnnonce.setPrice(new Double(500));
-        vehicleAnnonce.setViewed(new Long(1));
+        vehicleAnnonce.setPrice(Double.valueOf(500));
+        vehicleAnnonce.setViewed(1L);
         vehicleAnnonce.setTitle("Scooter a vendre!!");
         vehicleAnnonce.setCategory(Category.Vehicle);
         vehicleAnnonce.setImage("image1.jpg");

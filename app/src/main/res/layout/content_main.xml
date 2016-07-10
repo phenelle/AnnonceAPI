@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Congratulation !"
+        android:text="@string/congratluations"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
@@ -28,5 +28,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="114dp"
-        android:text="Quit" />
+        android:text="@string/quit" />
 </RelativeLayout>

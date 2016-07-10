@@ -77,7 +77,7 @@ public class AnnonceCtrl {
         while (annoncesIterator.hasNext()) {
 
             // Create an empty annonce
-            Annonce annonce = null;
+            Annonce annonce;
 
             // Read a single annonce from JSON
             JSONObject jsonObject = (JSONObject) annoncesIterator.next();

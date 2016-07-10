@@ -53,7 +53,7 @@ public class JsonFileUtil {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
         StringBuffer stringBuffer = new StringBuffer();
-        String line = "";
+        String line;
         while ((line = bufferedReader.readLine()) != null) {
             stringBuffer.append(line);
             stringBuffer.append("\n");

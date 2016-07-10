@@ -20,7 +20,6 @@ public class TextUtilTest extends TestCase {
      * Required to test the controller
      */
     private Annonce annonce1 = new Annonce();
-    private Annonce annonce2;
 
     /**
      * Required to test the controller
@@ -33,8 +32,8 @@ public class TextUtilTest extends TestCase {
         // Create a new Annonce and populate fields
         System.out.println("@Before - TextUtilTest - setUp");
         annonce1.setId(123L);
-        annonce1.setPrice(new Double(100));
-        annonce1.setViewed(new Long(100));
+        annonce1.setPrice(Double.valueOf(100));
+        annonce1.setViewed(100L);
         annonce1.setTitle("Scooter a vendre!!");
         annonce1.setCategory(Category.Vehicle);
         annonce1.setImage("image1.jpg");
@@ -51,7 +50,7 @@ public class TextUtilTest extends TestCase {
 
         // Read annonce from file
         System.out.println("@Test - TextUtilTest.readFromTxt");
-        annonce2 = TextUtil.readFromTxt(txtFileName);
+        Annonce annonce2 = TextUtil.readFromTxt(txtFileName);
         assertEquals("Saved annonce is different of the readed one", annonce1.toString(), annonce2.toString());
     }
 

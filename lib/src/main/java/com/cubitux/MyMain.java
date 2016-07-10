@@ -8,12 +8,6 @@ public class MyMain {
 
     public static void main(String[] args) throws Exception {
 
-
-        String txtFileName = "annonce.txt";
-
-        // Create new controller / view
-        AnnonceView view = new AnnonceView();
-
         // Create a new Annonce and populate fields
         System.out.println("Creating Annonce");
         Annonce annonce1 = new Annonce();
@@ -25,7 +19,6 @@ public class MyMain {
 
         System.out.println("Now showing nnonce");
         AnnonceView.show(annonce1);
-
 
     }
 }

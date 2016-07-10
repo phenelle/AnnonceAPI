@@ -106,7 +106,7 @@ public class AnnonceTest extends TestCase {
         System.out.println("@Test - testConstructor");
         com.cubitux.model.annonce.Annonce a = new com.cubitux.model.annonce.Annonce();
         assertEquals("The default status is not 'unpublished' ", a.getStatus(), Boolean.valueOf(false));
-        assertEquals("The default value for viewed is not 0 ", a.getViewed(), new Long(0));
+        assertEquals("The default value for viewed is not 0 ", a.getViewed(), Long.valueOf(0));
         assertNotNull("The default created date is empty", a.getCreated());
         assertNotNull("The default modified date is empty", a.getModified());
     }
@@ -128,6 +128,7 @@ public class AnnonceTest extends TestCase {
         assertEquals("The price is incorrect", this.price, annonce.getPrice());
         assertEquals("The viewed is incorrect", this.viewed, annonce.getViewed());
         assertEquals("The image path is incorrect", this.image, annonce.getImage());
+        assertEquals("The description is incorrect", this.description, annonce.getDescription());
     }
 
 }
