@@ -39,15 +39,6 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        Bundle extras = getIntent().getExtras();
-        user = (User) extras.getSerializable("User");
-
-        // Configure user's fullname and email
-        mUserFullname = (TextView) findViewById(R.id.userFullname);
-        mUserFullname.setText(user.getFirstName() + " " + user.getLastName());
-        mUserEmail = (TextView) findViewById(R.id.userEmail);
-        mUserEmail.setText(user.getEmail());
-
         // Drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -55,8 +46,20 @@ public class HomeActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // Inflate navigation's view to update it's content
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        View headerView = mNavigationView.getHeaderView(0);
+
+        // Get currently logged user
+        Bundle extras = getIntent().getExtras();
+        user = (User) extras.getSerializable("User");
+
+        // Configure user's fullname and email
+        mUserFullname = (TextView) headerView.findViewById(R.id.userFullname);
+        mUserFullname.setText(user.getFirstName() + " " + user.getLastName());
+        mUserEmail = (TextView) headerView.findViewById(R.id.userEmail);
+        mUserEmail.setText(user.getEmail());
     }
 
     @Override
