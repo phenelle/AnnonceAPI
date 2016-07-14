@@ -1,103 +1,53 @@
 package ca.cubitux.annonceapi;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.cubitux.controller.AnnonceCtrl;
-import com.cubitux.model.Category;
+import com.cubitux.model.User;
+
+import ca.cubitux.annonceapi.tasks.IsAuthLoadAsyncTask;
 
 /**
  * Created by pierre on 2016-07-10.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements AsyncTaskListener {
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Variable that will hold user's session (if any)
      */
-    private LoadAnnonceTask mLoadTask;
+    private String PREFERENCES = "UserPreferences";
 
-    /**
-     * Loading spinner
-     */
-    private ProgressDialog progress;
+    private IsAuthLoadAsyncTask mAsyncTask;
+
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        showProgress(true);
-        mLoadTask = new LoadAnnonceTask();
-        mLoadTask.execute((Void) null);
+
+        // Restore preferences
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
+        String session = sharedPreferences.getString("user_session", null);
+        if (session != null) {
+            mUser = new User();
+            mUser.setSession(session);
+            mAsyncTask = new IsAuthLoadAsyncTask(this, mUser);
+            mAsyncTask.showProgress(true);
+            mAsyncTask.execute((Void) null);
+        }
     }
 
-    /**
-     * Show or hide loading spinner
-     *
-     * @param show
-     */
-    private void showProgress(final boolean show) {
-        if (progress == null) {
-            progress = new ProgressDialog(this);
-            progress.setTitle("Loading");
-            progress.setMessage("Wait while loading annonce list...");
-        }
-
-        if (show) {
-            progress.show();
+    @Override
+    public void onPostExecute(Boolean success) {
+        if (success) {
+            Intent homeActivity = new Intent(this, HomeActivity.class);
+            homeActivity.putExtra("User", mUser);
+            startActivity(homeActivity);
         } else {
-            progress.dismiss();
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class LoadAnnonceTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            try {
-                AnnonceCtrl.list(Category.ALL);
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            super.onPostExecute(success);
-            mLoadTask = null;
-            showProgress(false);
-
-            if (success) {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
-                builder.setTitle("Error");
-                builder.setMessage("Cannot connect to the internet. Application will be closed.");
-                builder.setIcon(android.R.drawable.ic_dialog_alert);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                builder.show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mLoadTask = null;
-            showProgress(false);
-        }
-    }
-
 }

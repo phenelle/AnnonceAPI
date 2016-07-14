@@ -7,10 +7,11 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -28,7 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.cubitux.controller.UserCtrl;
 import com.cubitux.model.User;
 
 import java.util.ArrayList;
@@ -37,28 +37,37 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import ca.cubitux.annonceapi.tasks.LoginLoadAsyncTask;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, AsyncTaskListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Variable that will hold user's session (if any)
      */
-    private UserLoginTask mAuthTask = null;
-
+    private String PREFS_USER_SESSION = "user_session";
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private User mUser;
+
+    private LoginLoadAsyncTask mAuthTask;
+
+    /**
+     * Variable that will hold user's session (if any)
+     */
+    private String PREFERENCES = "UserPreferences";
 
     /**
      * Current user
@@ -147,9 +156,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -188,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new LoginLoadAsyncTask(this, mUser);
             mAuthTask.execute((Void) null);
         }
     }
@@ -286,6 +292,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    public void onPostExecute(Boolean success) {
+        if (success) {
+
+            SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
+            Editor edit = sharedPreferences.edit();
+            edit.putString("user_session", user.getSession());
+            edit.commit();
+
+            Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
+            homeActivity.putExtra("User", user);
+            startActivity(homeActivity);
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
+        }
+    }
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -297,50 +321,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final User user;
-
-        UserLoginTask(String email, String password) {
-            user = new User();
-            user.setLogin(email);
-            user.setPassword(password);
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                UserCtrl.authenticate(user);
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
-                homeActivity.putExtra("User", user);
-                startActivity(homeActivity);
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }
 
