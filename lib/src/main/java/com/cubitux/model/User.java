@@ -1,5 +1,6 @@
 package com.cubitux.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,9 @@ import java.util.Date;
  *
  * @created by pierre on 2016-05-12.
  */
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1986464620104872158L;
 
     /**
      * The country

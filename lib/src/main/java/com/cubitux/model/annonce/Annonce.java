@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,9 @@ import java.util.Date;
  * <p/>
  * Created by pierre on 2016-05-12.
  */
-public class Annonce {
+public class Annonce implements Serializable {
+
+    private static final long serialVersionUID = 6137439517260363687L;
 
     /**
      * The unique identifier

@@ -29,6 +29,11 @@ import java.util.List;
 public class AnnonceCtrl {
 
     /**
+     * Will hold latest annonces list
+     */
+    public static ArrayList<Annonce> annonces;
+
+    /**
      * Map list of annonce to JSON objects
      *
      * @param annonces
@@ -67,7 +72,7 @@ public class AnnonceCtrl {
      * @throws NoSuchMethodException
      */
     public static List<Annonce> toArray(String jsonString) throws org.json.simple.parser.ParseException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        ArrayList<Annonce> annonces = new ArrayList<Annonce>();
+        annonces = new ArrayList<Annonce>();
 
         JSONParser parser = new JSONParser();
         JSONObject jsonObjects = (JSONObject) parser.parse(jsonString);

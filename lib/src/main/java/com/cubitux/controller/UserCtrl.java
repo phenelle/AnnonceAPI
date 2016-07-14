@@ -77,18 +77,17 @@ public class UserCtrl {
         return false;
     }
 
+
     /**
      * Authenticate an user. If user gets authenticate, then it will have session
+     *
      * @param user
      * @throws LoginOrPasswordException
      * @throws AccountNotActivatedException
      * @throws SystemException,             Any other exception that is trapped (IO, Parse, etc...)
      */
     public static void authenticate(User user) throws LoginOrPasswordException, AccountNotActivatedException, SystemException {
-
         try {
-            String restUrl = PropertiesUtil.getValue("restUrlAuthenticate");
-
             // Reset any existing session
             user.setLogged(false);
             user.setSession(null);
@@ -99,6 +98,7 @@ public class UserCtrl {
             arguments.put("password", user.getPassword());
 
             // Response
+            String restUrl = PropertiesUtil.getValue("restUrlAuthenticate");
             String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
 
             // Parse JSON response
@@ -124,7 +124,6 @@ public class UserCtrl {
         } catch (java.text.ParseException pe2) {
             throw new SystemException(pe2);
         }
-
     }
 
     public static void register(User user) throws Exception {
