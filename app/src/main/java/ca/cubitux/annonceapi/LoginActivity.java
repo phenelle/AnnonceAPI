@@ -290,6 +290,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onPostExecute(Boolean success) {
+        showProgress(false);
         if (success) {
 
             // Store user's session
