@@ -19,8 +19,14 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
      */
     private String PREFERENCES = "UserPreferences";
 
+    /**
+     * Verify if logged task
+     */
     private IsAuthLoadAsyncTask mAsyncTask;
 
+    /**
+     * Current user
+     */
     private User mUser;
 
     @Override
@@ -28,15 +34,19 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Restore preferences
+        // Get last user's session
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
         String session = sharedPreferences.getString("user_session", null);
         if (session != null) {
+            // Verify if it is still valid
             mUser = new User();
             mUser.setSession(session);
             mAsyncTask = new IsAuthLoadAsyncTask(this, mUser);
             mAsyncTask.showProgress(true);
             mAsyncTask.execute((Void) null);
+        } else {
+            // Otherwise, launch Login activity
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 

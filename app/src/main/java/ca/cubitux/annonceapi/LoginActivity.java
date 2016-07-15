@@ -180,10 +180,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+        } else {
+            try {
+                InternetAddress emailAddr = new InternetAddress(email);
+                emailAddr.validate();
+            } catch (AddressException ex) {
+                mEmailView.setError(getString(R.string.error_invalid_email));
+                focusView = mEmailView;
+                cancel = true;
+            }
         }
 
         if (cancel) {
@@ -199,15 +204,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean isEmailValid(String email) {
-        try {
-            InternetAddress emailAddr = new InternetAddress(email);
-            emailAddr.validate();
-            return true;
-        } catch (AddressException ex) {
-        }
-        return false;
-    }
 
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
@@ -280,7 +276,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -296,11 +291,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onPostExecute(Boolean success) {
         if (success) {
 
+            // Store user's session
             SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
             Editor edit = sharedPreferences.edit();
             edit.putString("user_session", user.getSession());
             edit.commit();
 
+            // Start new activity
             Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
             homeActivity.putExtra("User", user);
             startActivity(homeActivity);
