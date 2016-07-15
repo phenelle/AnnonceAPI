@@ -5,6 +5,7 @@ import com.cubitux.model.annonce.Annonce;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -18,17 +19,18 @@ public class AnnonceView {
      * @param annonce Annonce to be displayed
      * @throws Exception
      */
-    public static void show(Annonce annonce) throws Exception {
+    public static void show(Annonce annonce) throws InvocationTargetException, IllegalAccessException {
         Field[] fields = annonce.getClass().getDeclaredFields();
         for (Field field : fields) {
             String fieldName = field.getName();
             String getterName = "get" + StringUtils.capitalize(fieldName);
-
-            Method method = annonce.getClass().getMethod(getterName);
-            Object valueObject = method.invoke(annonce, (Object[]) null);
-            String fieldValue = valueObject != null ? valueObject.toString() : null;
-
-            System.out.println(fieldName + " = " + fieldValue);
+            try {
+                Method method = annonce.getClass().getMethod(getterName);
+                Object valueObject = method.invoke(annonce, (Object[]) null);
+                String fieldValue = valueObject != null ? valueObject.toString() : null;
+                System.out.println(fieldName + " = " + fieldValue);
+            } catch (NoSuchMethodException e) {
+            }
         }
     }
 }

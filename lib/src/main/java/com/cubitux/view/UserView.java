@@ -23,12 +23,13 @@ public class UserView {
         for (Field field : fields) {
             String fieldName = field.getName();
             String getterName = "get" + StringUtils.capitalize(fieldName);
-
-            Method method = user.getClass().getMethod(getterName);
-            Object valueObject = method.invoke(user, (Object[]) null);
-            String fieldValue = valueObject != null ? valueObject.toString() : null;
-
-            System.out.println(fieldName + " = " + fieldValue);
+            try {
+                Method method = user.getClass().getMethod(getterName);
+                Object valueObject = method.invoke(user, (Object[]) null);
+                String fieldValue = valueObject != null ? valueObject.toString() : null;
+                System.out.println(fieldName + " = " + fieldValue);
+            } catch (NoSuchMethodException e) {
+            }
         }
     }
 }

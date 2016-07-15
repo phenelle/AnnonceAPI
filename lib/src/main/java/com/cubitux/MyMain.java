@@ -12,7 +12,7 @@ public class MyMain {
         System.out.println("Creating Annonce");
         Annonce annonce1 = new Annonce();
         annonce1.setId(1L);
-        annonce1.setPrice(new Double(100));
+        annonce1.setPrice(Double.valueOf(100));
         annonce1.setTitle("Scooter a vendre!!");
         annonce1.setCategory(Category.Vehicle);
         annonce1.setDescription("Tres beau scooter \nFull option");
