@@ -1,4 +1,4 @@
-package ca.cubitux.annonceapi;
+package ca.cubitux.annonceapi.tasks;
 
 import android.app.Activity;
 

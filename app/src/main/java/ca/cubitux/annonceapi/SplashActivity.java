@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cubitux.model.User;
 
+import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.IsAuthLoadAsyncTask;
 
 /**

@@ -10,7 +10,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
-        multiDexEnabled false
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,7 +26,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'javax.mail:javax.mail-api:1.5.5'
     compile 'com.sun.mail:javax.mail:1.5.5'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'

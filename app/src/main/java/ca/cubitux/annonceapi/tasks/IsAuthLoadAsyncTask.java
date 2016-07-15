@@ -5,8 +5,6 @@ import android.app.Activity;
 import com.cubitux.controller.UserCtrl;
 import com.cubitux.model.User;
 
-import ca.cubitux.annonceapi.AsyncTaskListener;
-
 /**
  * Created by pierre on 2016-07-14.
  */

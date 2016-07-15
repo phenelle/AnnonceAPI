@@ -12,8 +12,6 @@ import com.cubitux.model.annonce.Annonce;
 
 import java.util.List;
 
-import ca.cubitux.annonceapi.AsyncTaskListener;
-
 /**
  * Represents an asynchronous login/registration task used to authenticate
  * the user.

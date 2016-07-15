@@ -37,6 +37,7 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LoginLoadAsyncTask;
 
 import static android.Manifest.permission.READ_CONTACTS;
