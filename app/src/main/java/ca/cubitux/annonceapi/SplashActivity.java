@@ -35,26 +35,32 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Make it wait a little, so we can see the splash screen
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-        }
+        Thread splashTimer = new Thread() {
+            public void run() {
+                try {
+                    sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    // Get last user's session
+                    SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
+                    String session = sharedPreferences.getString("user_session", null);
+                    if (session != null) {
+                        // Verify if it is still valid
+                        mUser = new User();
+                        mUser.setSession(session);
+                        mAsyncTask = new IsAuthLoadAsyncTask(SplashActivity.this, mUser);
+                        mAsyncTask.execute((Void) null);
+                    } else {
+                        // Otherwise, launch Login activity
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        SplashActivity.this.finish();
+                    }
+                }
+            }
+        };
+        splashTimer.start();
 
-        // Get last user's session
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
-        String session = sharedPreferences.getString("user_session", null);
-        if (session != null) {
-            // Verify if it is still valid
-            mUser = new User();
-            mUser.setSession(session);
-            mAsyncTask = new IsAuthLoadAsyncTask(this, mUser);
-            mAsyncTask.execute((Void) null);
-        } else {
-            // Otherwise, launch Login activity
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
     }
 
     @Override
@@ -63,10 +69,11 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
             Intent homeActivity = new Intent(this, HomeActivity.class);
             homeActivity.putExtra("User", mUser);
             startActivity(homeActivity);
+            SplashActivity.this.finish();
         } else {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            SplashActivity.this.finish();
         }
         // close current activity
-        finish();
     }
 }
