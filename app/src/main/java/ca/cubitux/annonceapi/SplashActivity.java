@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
 
     @Override
     public void onPostExecute(Boolean success) {
-        if (success) {
+        if (success && mUser.isLogged()) {
             Intent homeActivity = new Intent(this, HomeActivity.class);
             homeActivity.putExtra("User", mUser);
             startActivity(homeActivity);

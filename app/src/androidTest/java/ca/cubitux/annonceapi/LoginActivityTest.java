@@ -1,11 +1,13 @@
 package ca.cubitux.annonceapi;
 
+import android.app.Activity;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +21,14 @@ public class LoginActivityTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class);
 
+    @Before
+    public void setActivity() {
+        Activity activity = mActivityRule.getActivity();
+    }
+
     @Test
     public void testLogin() {
+
         Espresso.onView(ViewMatchers.withId(R.id.email))
                 .perform(ViewActions.typeText("user1"), ViewActions.closeSoftKeyboard());
 

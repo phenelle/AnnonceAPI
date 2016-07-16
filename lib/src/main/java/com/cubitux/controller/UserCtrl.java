@@ -45,7 +45,7 @@ public class UserCtrl {
      * @throws SystemException
      */
     public static Boolean isAuthenticate(User user) throws SystemException {
-        if (user != null && user.isLogged() && user.getSession() != null) {
+        if (user != null && user.getSession() != null) {
             try {
                 String restUrl = PropertiesUtil.getValue("restUrlIsAuthenticate");
 
@@ -61,6 +61,7 @@ public class UserCtrl {
                 JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
                 Long error = (Long) jsonObject.get("error");
                 if (error.intValue() == 0) {
+                    user.setLogged(true);
                     jsonToUser(jsonObject, user);
                     return true;
                 }
