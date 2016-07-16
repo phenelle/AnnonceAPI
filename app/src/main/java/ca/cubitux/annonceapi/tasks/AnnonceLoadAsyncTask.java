@@ -5,6 +5,7 @@ package ca.cubitux.annonceapi.tasks;
  */
 
 import android.app.Activity;
+import android.os.AsyncTask;
 
 import com.cubitux.controller.AnnonceCtrl;
 import com.cubitux.model.Category;
@@ -16,19 +17,13 @@ import java.util.List;
  * Represents an asynchronous login/registration task used to authenticate
  * the user.
  */
-public class AnnonceLoadAsyncTask extends ALoadAsyncTask {
+public class AnnonceLoadAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
+    public List<Annonce> mAnnonces;
     private Activity mActivity;
 
-    private List<Annonce> mAnnonces;
-
     public AnnonceLoadAsyncTask(Activity activity) {
-        super(activity);
         mActivity = activity;
-    }
-
-    public List<Annonce> getAnnonces() {
-        return mAnnonces;
     }
 
     @Override
@@ -44,15 +39,9 @@ public class AnnonceLoadAsyncTask extends ALoadAsyncTask {
     @Override
     protected void onPostExecute(final Boolean success) {
         super.onPostExecute(success);
-        showProgress(false);
         if (mActivity instanceof AsyncTaskListener) {
             AsyncTaskListener asyncTaskListener = (AsyncTaskListener) mActivity;
             asyncTaskListener.onPostExecute(success);
         }
-    }
-
-    @Override
-    protected void onCancelled() {
-        showProgress(false);
     }
 }

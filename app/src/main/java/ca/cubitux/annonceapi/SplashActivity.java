@@ -35,6 +35,12 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        // Make it wait a little, so we can see the splash screen
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+
         // Get last user's session
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
         String session = sharedPreferences.getString("user_session", null);
@@ -43,11 +49,11 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
             mUser = new User();
             mUser.setSession(session);
             mAsyncTask = new IsAuthLoadAsyncTask(this, mUser);
-            mAsyncTask.showProgress(true);
             mAsyncTask.execute((Void) null);
         } else {
             // Otherwise, launch Login activity
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
     }
 
@@ -60,5 +66,7 @@ public class SplashActivity extends AppCompatActivity implements AsyncTaskListen
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }
+        // close current activity
+        finish();
     }
 }

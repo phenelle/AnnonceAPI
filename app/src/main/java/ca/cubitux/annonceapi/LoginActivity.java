@@ -51,18 +51,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    /**
-     * Variable that will hold user's session (if any)
-     */
-    private String PREFS_USER_SESSION = "user_session";
+
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
-    private User mUser;
-
+    /**
+     * Authentification task
+     */
     private LoginLoadAsyncTask mAuthTask;
 
     /**
@@ -73,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Current user
      */
-    private User user = new User();
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +109,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -200,6 +197,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
+            // Verify user authentication
+            mUser = new User();
+            mUser.setLogin(email);
+            mUser.setPassword(password);
             mAuthTask = new LoginLoadAsyncTask(this, mUser);
             mAuthTask.execute((Void) null);
         }
@@ -296,12 +298,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Store user's session
             SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
             Editor edit = sharedPreferences.edit();
-            edit.putString("user_session", user.getSession());
+            edit.putString("user_session", mUser.getSession());
             edit.commit();
 
             // Start new activity
             Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
-            homeActivity.putExtra("User", user);
+            homeActivity.putExtra("User", mUser);
             startActivity(homeActivity);
         } else {
             mPasswordView.setError(getString(R.string.error_incorrect_password));
