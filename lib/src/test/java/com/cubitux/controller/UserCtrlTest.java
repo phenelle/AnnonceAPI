@@ -42,6 +42,29 @@ public class UserCtrlTest extends TestCase {
     }
 
     @Test
+    public void testLogout() throws Exception {
+        System.out.println("@Test - testAuthenticate");
+
+        // Verify authenticate method
+        UserCtrl.authenticate(admin);
+        assertTrue("admin not logged", admin.isLogged());
+        assertNotNull("admin has no session", admin.getSession());
+
+        // Store session
+        String session = admin.getSession();
+
+        // Force logout
+        UserCtrl.logout(admin);
+        assertFalse("admin is still logged", admin.isLogged());
+        assertNull("admin still have session", admin.getSession());
+
+        // Verify session have been removed
+        admin.setSession(session);
+        UserCtrl.isAuthenticate(admin);
+        assertFalse("admin session is still active", admin.isLogged());
+    }
+
+    @Test
     public void testAuthenticate() throws Exception {
         System.out.println("@Test - testAuthenticate");
 

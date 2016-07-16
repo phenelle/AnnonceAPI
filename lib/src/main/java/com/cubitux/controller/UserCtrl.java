@@ -126,6 +126,38 @@ public class UserCtrl {
         }
     }
 
+    public static Boolean logout(User user) throws Exception {
+        if (user.getSession() != null) {
+            try {
+                String restUrl = PropertiesUtil.getValue("restUrlLogout");
+
+                // Perform HTTP call
+                HashMap<String, String> arguments = new HashMap<String, String>();
+                arguments.put("session", user.getSession());
+
+                // Response
+                String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
+
+                // Parse JSON response
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
+                Long error = (Long) jsonObject.get("error");
+                if (error.intValue() == 0) {
+                    user.setSession(null);
+                    user.setLogged(false);
+                    return true;
+                }
+
+            } catch (IOException ioe) {
+                throw new SystemException(ioe);
+            } catch (org.json.simple.parser.ParseException pe1) {
+                throw new SystemException(pe1);
+            }
+        }
+
+        return false;
+    }
+
     public static void register(User user) throws Exception {
 
     }
