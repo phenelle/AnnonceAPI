@@ -21,7 +21,7 @@ public class AnnonceList extends ArrayAdapter<String> {
     private final Integer[] imageId;
 
     public AnnonceList(Activity context, String[] web, Integer[] imageId) {
-        super(context, R.layout.list_single_item, web);
+        super(context, R.layout.content_home_listview_item, web);
         this.context = context;
         this.web = web;
         this.imageId = imageId;
@@ -31,7 +31,7 @@ public class AnnonceList extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.list_single_item, null, true);
+        View rowView = inflater.inflate(R.layout.content_home_listview_item, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);

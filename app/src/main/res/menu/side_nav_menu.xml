@@ -3,9 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:id="@+id/nav_publish_annonce"
+            android:icon="@drawable/ic_add_box"
             android:title="Publish annonce" />
+        <item
+            android:id="@+id/nav_my_annonce"
+            android:icon="@drawable/ic_list"
+            android:title="My annonce" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_stars"
+            android:title="Favorite" />
     </group>
 
     <item android:title="Account">
@@ -16,7 +24,7 @@
                 android:title="Edit profile" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_menu_logout"
+                android:icon="@drawable/ic_power_settings_new"
                 android:title="Logout" />
         </menu>
     </item>
