@@ -16,7 +16,9 @@
             android:title="Favorite" />
     </group>
 
-    <item android:title="Account">
+    <item
+        android:id="@+id/nav_group_profile"
+        android:title="Account">
         <menu>
             <item
                 android:id="@+id/nav_edit_profile"

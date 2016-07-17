@@ -3,6 +3,7 @@ package ca.cubitux.annonceapi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.cubitux.model.User;
 
@@ -34,25 +35,35 @@ public class SplashActivity extends Activity implements AsyncTaskListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        // Create an empty user
+        mUser = new User();
+
+        // Allow to see the splash screen for 1 second
         Thread splashTimer = new Thread() {
             public void run() {
                 try {
-                    sleep(2000);
+                    sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.d(this.getName(), "Exception with Thread.sleep()", e);
                 } finally {
+
                     // Get last user's session
                     SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
                     String session = sharedPreferences.getString("user_session", null);
+
                     if (session != null) {
-                        // Verify if it is still valid
-                        mUser = new User();
+                        // Verify if session is still active
                         mUser.setSession(session);
                         mAsyncTask = new IsAuthAsyncTask(SplashActivity.this, mUser);
                         mAsyncTask.execute((Void) null);
                     } else {
-                        // Otherwise, launch Login activity
-                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        Intent homeActivity = new Intent(SplashActivity.this, HomeActivity.class);
+
+                        // Pass mUser and then start Activity
+                        homeActivity.putExtra("User", mUser);
+                        startActivity(homeActivity);
+
+                        // close current activity
                         SplashActivity.this.finish();
                     }
                 }
@@ -64,15 +75,13 @@ public class SplashActivity extends Activity implements AsyncTaskListener {
 
     @Override
     public void onPostExecute(Boolean success) {
-        if (success && mUser.isLogged()) {
-            Intent homeActivity = new Intent(this, HomeActivity.class);
-            homeActivity.putExtra("User", mUser);
-            startActivity(homeActivity);
-            SplashActivity.this.finish();
-        } else {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            SplashActivity.this.finish();
-        }
+        Intent homeActivity = new Intent(this, HomeActivity.class);
+
+        // Pass mUser and then start Activity
+        homeActivity.putExtra("User", mUser);
+        startActivity(homeActivity);
+
         // close current activity
+        SplashActivity.this.finish();
     }
 }

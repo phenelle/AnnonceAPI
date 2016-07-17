@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.cubitux.model.User;
@@ -37,18 +38,28 @@ public class HomeActivity extends Activity
      */
     private LogoutAsyncTask mLogoutTask;
 
+    private View headerViewLogged, headerViewUnlogged;
+
+    private Menu mMenu;
+
+    private NavigationView mNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Custom toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Home - AnnonceAPI");
         setSupportActionBar(toolbar);
 
+        // Floating button (right bottom corner)
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Publish new annonce", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -60,21 +71,44 @@ public class HomeActivity extends Activity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Inflate navigation's view to update it's content
-        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        // Get NavigationViews
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
-        View headerView = mNavigationView.getHeaderView(0);
+
+        // Bind click to unlogged HeaderView
+        headerViewUnlogged = mNavigationView.getHeaderView(0);
+        Button buttonSignIn = (Button) headerViewUnlogged.findViewById(R.id.sign_in);
+        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                HomeActivity.this.finish();
+            }
+        });
+        mMenu = mNavigationView.getMenu();
+        mMenu.findItem(R.id.nav_group_profile).setVisible(false);
 
         // Get currently logged user
         Bundle extras = getIntent().getExtras();
         mUser = (User) extras.getSerializable("User");
+        if (mUser != null && mUser.isLogged()) {
 
-        // Configure user's fullname and email
-        mUserFullname = (TextView) headerView.findViewById(R.id.userFullname);
-        mUserFullname.setText(mUser.getFirstName() + " " + mUser.getLastName());
-        mUserEmail = (TextView) headerView.findViewById(R.id.userEmail);
-        mUserEmail.setText(mUser.getEmail());
+            // Inflate logged HeaderView
+            headerViewLogged = getLayoutInflater().inflate(R.layout.side_nav_logged_drawer, mNavigationView);
+            headerViewUnlogged.setVisibility(View.INVISIBLE);
+
+            // Toggle visibility
+            headerViewLogged.setVisibility(View.VISIBLE);
+            mMenu.findItem(R.id.nav_group_profile).setVisible(true);
+
+            // Configure user's fullname and email
+            mUserFullname = (TextView) headerViewLogged.findViewById(R.id.userFullname);
+            mUserFullname.setText(mUser.getFirstName() + " " + mUser.getLastName());
+            mUserEmail = (TextView) headerViewLogged.findViewById(R.id.userEmail);
+            mUserEmail.setText(mUser.getEmail());
+        }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -134,10 +168,8 @@ public class HomeActivity extends Activity
     public void onPostExecute(Boolean success) {
         showProgress(false);
         if (success) {
-            startActivity(new Intent(this, LoginActivity.class));
-            this.finish();
-        } else {
-
+            headerViewLogged = getLayoutInflater().inflate(R.layout.side_nav_unlogged_drawer, mNavigationView);
+            mMenu.findItem(R.id.nav_group_profile).setVisible(false);
         }
         mLogoutTask = null;
     }
