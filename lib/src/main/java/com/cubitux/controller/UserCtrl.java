@@ -127,7 +127,7 @@ public class UserCtrl {
         }
     }
 
-    public static Boolean logout(User user) throws Exception {
+    public static Boolean logout(User user) throws SystemException {
         if (user.getSession() != null) {
             try {
                 String restUrl = PropertiesUtil.getValue("restUrlLogout");

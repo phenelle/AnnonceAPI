@@ -1,5 +1,6 @@
 package ca.cubitux.annonceapi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,14 +15,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cubitux.controller.UserCtrl;
 import com.cubitux.model.User;
+import com.cubitux.model.exception.SystemException;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView mUserFullname, mUserEmail;
 
-    private User user;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +56,13 @@ public class HomeActivity extends AppCompatActivity
 
         // Get currently logged user
         Bundle extras = getIntent().getExtras();
-        user = (User) extras.getSerializable("User");
+        mUser = (User) extras.getSerializable("User");
 
         // Configure user's fullname and email
         mUserFullname = (TextView) headerView.findViewById(R.id.userFullname);
-        mUserFullname.setText(user.getFirstName() + " " + user.getLastName());
+        mUserFullname.setText(mUser.getFirstName() + " " + mUser.getLastName());
         mUserEmail = (TextView) headerView.findViewById(R.id.userEmail);
-        mUserEmail.setText(user.getEmail());
+        mUserEmail.setText(mUser.getEmail());
     }
 
     @Override
@@ -102,16 +105,16 @@ public class HomeActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_edit_profile) {
+            // Handle edit profile
+        } else if (id == R.id.nav_logout) {
+            try {
+                UserCtrl.logout(mUser);
+                startActivity(new Intent(this, LoginActivity.class));
+                this.finish();
+            } catch (SystemException e) {
+                // @TODO: handle exception here
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
