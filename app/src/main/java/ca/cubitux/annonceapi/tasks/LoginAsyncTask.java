@@ -9,13 +9,13 @@ import com.cubitux.model.User;
 /**
  * Created by pierre on 2016-07-14.
  */
-public class LoginLoadAsyncTask extends AsyncTask<Void, Void, Boolean> {
+public class LoginAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private Activity mActivity;
 
     private User mUser;
 
-    public LoginLoadAsyncTask(Activity activity, User user) {
+    public LoginAsyncTask(Activity activity, User user) {
         mActivity = activity;
         mUser = user;
     }

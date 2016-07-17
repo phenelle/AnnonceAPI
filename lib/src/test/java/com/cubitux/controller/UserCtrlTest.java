@@ -62,6 +62,7 @@ public class UserCtrlTest extends TestCase {
         admin.setSession(session);
         UserCtrl.isAuthenticate(admin);
         assertFalse("admin session is still active", admin.isLogged());
+
     }
 
     @Test

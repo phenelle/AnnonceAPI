@@ -31,6 +31,7 @@ dependencies {
     compile 'com.sun.mail:javax.mail:1.5.5'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
+    compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.6'
     compile project(':lib')
     testCompile 'junit:junit:4.12'
 }

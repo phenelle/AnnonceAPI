@@ -45,7 +45,8 @@ public class UserCtrl {
      * @throws SystemException
      */
     public static Boolean isAuthenticate(User user) throws SystemException {
-        if (user != null && user.getSession() != null) {
+        if (user.getSession() != null) {
+            user.setLogged(false);
             try {
                 String restUrl = PropertiesUtil.getValue("restUrlIsAuthenticate");
 

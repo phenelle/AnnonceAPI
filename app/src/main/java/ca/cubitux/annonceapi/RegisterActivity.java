@@ -1,9 +1,8 @@
 package ca.cubitux.annonceapi;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

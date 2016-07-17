@@ -8,23 +8,34 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cubitux.controller.UserCtrl;
 import com.cubitux.model.User;
-import com.cubitux.model.exception.SystemException;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
+import ca.cubitux.annonceapi.tasks.LogoutAsyncTask;
 
+public class HomeActivity extends Activity
+        implements NavigationView.OnNavigationItemSelectedListener, AsyncTaskListener {
+
+    /**
+     * Used by the navigation drawer
+     */
     private TextView mUserFullname, mUserEmail;
 
+    /**
+     * Current user
+     */
     private User mUser;
+
+    /**
+     * Logout task
+     */
+    private LogoutAsyncTask mLogoutTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,17 +119,26 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_edit_profile) {
             // Handle edit profile
         } else if (id == R.id.nav_logout) {
-            try {
-                UserCtrl.logout(mUser);
-                startActivity(new Intent(this, LoginActivity.class));
-                this.finish();
-            } catch (SystemException e) {
-                // @TODO: handle exception here
-            }
+            showProgress(true);
+            mLogoutTask = new LogoutAsyncTask(this, mUser);
+            mLogoutTask.execute((Void) null);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    @Override
+    public void onPostExecute(Boolean success) {
+        showProgress(false);
+        if (success) {
+            startActivity(new Intent(this, LoginActivity.class));
+            this.finish();
+        } else {
+
+        }
+        mLogoutTask = null;
     }
 }

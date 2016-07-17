@@ -1,29 +1,35 @@
 package ca.cubitux.annonceapi.tasks;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-
-import com.cubitux.controller.UserCtrl;
-import com.cubitux.model.User;
-
 /**
  * Created by pierre on 2016-07-14.
  */
-public class IsAuthLoadAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
+import android.app.Activity;
+import android.os.AsyncTask;
+
+import com.cubitux.controller.AnnonceCtrl;
+import com.cubitux.model.Category;
+import com.cubitux.model.annonce.Annonce;
+
+import java.util.List;
+
+/**
+ * Represents an asynchronous login/registration task used to authenticate
+ * the user.
+ */
+public class AnnonceAsyncTask extends AsyncTask<Void, Void, Boolean> {
+
+    public List<Annonce> mAnnonces;
     private Activity mActivity;
 
-    private User mUser;
-
-    public IsAuthLoadAsyncTask(Activity activity, User user) {
+    public AnnonceAsyncTask(Activity activity) {
         mActivity = activity;
-        mUser = user;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            UserCtrl.isAuthenticate(mUser);
+            mAnnonces = AnnonceCtrl.list(Category.ALL);
         } catch (Exception e) {
             return false;
         }
@@ -38,5 +44,4 @@ public class IsAuthLoadAsyncTask extends AsyncTask<Void, Void, Boolean> {
             asyncTaskListener.onPostExecute(success);
         }
     }
-
 }
