@@ -15,15 +15,21 @@ public class IsAuthAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private User mUser;
 
-    public IsAuthAsyncTask(Activity activity, User user) {
+    private String mSession;
+
+    public IsAuthAsyncTask(Activity activity, String session) {
         mActivity = activity;
-        mUser = user;
+        mSession = session;
+    }
+
+    public User getUser() {
+        return mUser;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            UserCtrl.isAuthenticate(mUser);
+            mUser = UserCtrl.isAuthenticate(mSession);
         } catch (Exception e) {
             return false;
         }
@@ -35,7 +41,7 @@ public class IsAuthAsyncTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(success);
         if (mActivity instanceof AsyncTaskListener) {
             AsyncTaskListener asyncTaskListener = (AsyncTaskListener) mActivity;
-            asyncTaskListener.onPostExecute(success);
+            asyncTaskListener.onPostExecute(success, this);
         }
     }
 

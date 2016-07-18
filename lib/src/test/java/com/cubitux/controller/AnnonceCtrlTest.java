@@ -22,7 +22,7 @@ public class AnnonceCtrlTest extends TestCase {
     public void testList() throws Exception {
         System.out.println("@Test - testList");
         Category category = Category.ALL;
-        List<Annonce> annoncesAll = AnnonceCtrl.list(category);
-        assertFalse("List is empty", annoncesAll.isEmpty());
+        List<Annonce> annonces = AnnonceCtrl.list(category);
+        assertFalse("List is empty", annonces.isEmpty());
     }
 }

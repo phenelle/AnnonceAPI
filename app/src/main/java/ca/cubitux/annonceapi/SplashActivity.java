@@ -2,6 +2,7 @@ package ca.cubitux.annonceapi;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -53,8 +54,7 @@ public class SplashActivity extends Activity implements AsyncTaskListener {
 
                     if (session != null) {
                         // Verify if session is still active
-                        mUser.setSession(session);
-                        mAsyncTask = new IsAuthAsyncTask(SplashActivity.this, mUser);
+                        mAsyncTask = new IsAuthAsyncTask(SplashActivity.this, session);
                         mAsyncTask.execute((Void) null);
                     } else {
                         Intent homeActivity = new Intent(SplashActivity.this, HomeActivity.class);
@@ -74,9 +74,10 @@ public class SplashActivity extends Activity implements AsyncTaskListener {
     }
 
     @Override
-    public void onPostExecute(Boolean success) {
+    public void onPostExecute(Boolean success, AsyncTask asyncTask) {
         Intent homeActivity = new Intent(this, HomeActivity.class);
 
+        mUser = ((IsAuthAsyncTask) asyncTask).getUser();
         // Pass mUser and then start Activity
         homeActivity.putExtra("User", mUser);
         startActivity(homeActivity);

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -195,19 +196,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
             showProgress(true);
 
             // Verify user authentication
-            mUser = new User();
-            mUser.setLogin(email);
-            mUser.setPassword(password);
-            mAuthTask = new LoginAsyncTask(this, mUser);
+            mAuthTask = new LoginAsyncTask(this, email, password);
             mAuthTask.execute((Void) null);
         }
     }
 
 
     @Override
-    public void onPostExecute(Boolean success) {
+    public void onPostExecute(Boolean success, AsyncTask asyncTask) {
         showProgress(false);
         if (success) {
+            mUser = ((LoginAsyncTask) asyncTask).getUser();
+
             // Store user's session
             SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
             SharedPreferences.Editor edit = sharedPreferences.edit();

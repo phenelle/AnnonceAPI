@@ -46,7 +46,7 @@ public class UserCtrlTest extends TestCase {
         System.out.println("@Test - testAuthenticate");
 
         // Verify authenticate method
-        UserCtrl.authenticate(admin);
+        admin = UserCtrl.authenticate(admin.getLogin(), admin.getPassword());
         assertTrue("admin not logged", admin.isLogged());
         assertNotNull("admin has no session", admin.getSession());
 
@@ -54,13 +54,12 @@ public class UserCtrlTest extends TestCase {
         String session = admin.getSession();
 
         // Force logout
-        UserCtrl.logout(admin);
+        admin = UserCtrl.logout(session);
         assertFalse("admin is still logged", admin.isLogged());
         assertNull("admin still have session", admin.getSession());
 
         // Verify session have been removed
-        admin.setSession(session);
-        UserCtrl.isAuthenticate(admin);
+        admin = UserCtrl.isAuthenticate(session);
         assertFalse("admin session is still active", admin.isLogged());
 
     }
@@ -70,7 +69,7 @@ public class UserCtrlTest extends TestCase {
         System.out.println("@Test - testAuthenticate");
 
         // Verify authenticate method
-        UserCtrl.authenticate(admin);
+        admin = UserCtrl.authenticate(admin.getLogin(), admin.getPassword());
         assertTrue("admin not logged", admin.isLogged());
         assertNotNull("admin has no session", admin.getSession());
         assertEquals("firstname is incorrect", "Mr", admin.getFirstName());
@@ -82,25 +81,27 @@ public class UserCtrlTest extends TestCase {
         assertEquals("country is incorrect", admin.getCountry(), "France");
         assertEquals("role is incorrect", admin.getRole(), Role.Administrator);
         try {
-            UserCtrl.authenticate(user);
+            user = UserCtrl.authenticate(user.getLogin(), user.getPassword());
         } catch (Exception e) {
             assertSame("Wrong exception was thrown", e.getClass(), AccountNotActivatedException.class);
         }
 
         // Verify isAuthenticate method
-        assertTrue("user should be authenticate with this session id", UserCtrl.isAuthenticate(admin));
+        String session = admin.getSession();
+        admin = UserCtrl.isAuthenticate(session);
+        assertTrue("user should be authenticate with this session id", admin.isLogged());
 
         // Verify user is not auth if password is incorrect
         try {
-            admin.setPassword("456");
-            UserCtrl.authenticate(admin);
+            String login = admin.getLogin();
+            String password = "567";
+            admin = new User();
+            admin = UserCtrl.authenticate(login, password);
         } catch (Exception e) {
             assertSame("Wrong exception was thrown", e.getClass(), LoginOrPasswordException.class);
         }
-        assertNull("session was not removed", admin.getSession());
-        assertFalse("user is still logged...", admin.isLogged());
-
-
+        assertNull("session is not empty", admin.getSession());
+        assertFalse("user is logged...", admin.isLogged());
     }
 
 

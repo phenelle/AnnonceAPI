@@ -19,11 +19,15 @@ import java.util.List;
  */
 public class AnnonceAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-    public List<Annonce> mAnnonces;
+    private List<Annonce> mAnnonces;
     private Activity mActivity;
 
     public AnnonceAsyncTask(Activity activity) {
         mActivity = activity;
+    }
+
+    public List<Annonce> getAnnonces() {
+        return mAnnonces;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class AnnonceAsyncTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(success);
         if (mActivity instanceof AsyncTaskListener) {
             AsyncTaskListener asyncTaskListener = (AsyncTaskListener) mActivity;
-            asyncTaskListener.onPostExecute(success);
+            asyncTaskListener.onPostExecute(success, this);
         }
     }
 }

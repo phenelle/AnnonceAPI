@@ -1,6 +1,7 @@
 package ca.cubitux.annonceapi;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,11 +13,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cubitux.model.User;
+import com.cubitux.model.annonce.Annonce;
 
+import java.util.List;
+
+import ca.cubitux.annonceapi.list.AnnonceList;
+import ca.cubitux.annonceapi.tasks.AnnonceAsyncTask;
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LogoutAsyncTask;
 
@@ -34,15 +42,26 @@ public class HomeActivity extends Activity
     private User mUser;
 
     /**
+     * Latest annonce
+     */
+    private List<Annonce> mAnnonces;
+
+    /**
      * Logout task
      */
     private LogoutAsyncTask mLogoutTask;
+
+    private AnnonceAsyncTask mAnnonceTask;
 
     private View headerViewLogged, headerViewUnlogged;
 
     private Menu mMenu;
 
     private NavigationView mNavigationView;
+
+    private ListView mListView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +126,9 @@ public class HomeActivity extends Activity
             mUserEmail = (TextView) headerViewLogged.findViewById(R.id.userEmail);
             mUserEmail.setText(mUser.getEmail());
         }
+
+        mAnnonceTask = new AnnonceAsyncTask(this);
+        mAnnonceTask.execute((Void) null);
     }
 
 
@@ -154,7 +176,7 @@ public class HomeActivity extends Activity
             // Handle edit profile
         } else if (id == R.id.nav_logout) {
             showProgress(true);
-            mLogoutTask = new LogoutAsyncTask(this, mUser);
+            mLogoutTask = new LogoutAsyncTask(this, mUser.getSession());
             mLogoutTask.execute((Void) null);
         }
 
@@ -165,12 +187,32 @@ public class HomeActivity extends Activity
 
 
     @Override
-    public void onPostExecute(Boolean success) {
+    public void onPostExecute(Boolean success, AsyncTask asyncTask) {
         showProgress(false);
-        if (success) {
+        if (success && asyncTask instanceof LogoutAsyncTask) {
+            mUser = ((LogoutAsyncTask) asyncTask).getUser();
             headerViewLogged = getLayoutInflater().inflate(R.layout.side_nav_unlogged_drawer, mNavigationView);
             mMenu.findItem(R.id.nav_group_profile).setVisible(false);
+            mLogoutTask = null;
         }
-        mLogoutTask = null;
+
+        if (success && asyncTask instanceof AnnonceAsyncTask) {
+
+            // Load Annonce List
+            mAnnonces = ((AnnonceAsyncTask) asyncTask).getAnnonces();
+            AnnonceList adapter = new AnnonceList(HomeActivity.this, mAnnonces);
+            mListView = (ListView) findViewById(R.id.listView);
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
+
+            mAnnonceTask = null;
+        }
+
+
     }
 }

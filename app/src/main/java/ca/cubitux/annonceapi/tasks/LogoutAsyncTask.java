@@ -15,15 +15,21 @@ public class LogoutAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private User mUser;
 
-    public LogoutAsyncTask(Activity activity, User user) {
+    private String mSession;
+
+    public LogoutAsyncTask(Activity activity, String session) {
         mActivity = activity;
-        mUser = user;
+        mSession = session;
+    }
+
+    public User getUser() {
+        return mUser;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            UserCtrl.logout(mUser);
+            mUser = UserCtrl.logout(mSession);
         } catch (Exception e) {
             return false;
         }
@@ -35,7 +41,7 @@ public class LogoutAsyncTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(success);
         if (mActivity instanceof AsyncTaskListener) {
             AsyncTaskListener asyncTaskListener = (AsyncTaskListener) mActivity;
-            asyncTaskListener.onPostExecute(success);
+            asyncTaskListener.onPostExecute(success, this);
         }
     }
 }

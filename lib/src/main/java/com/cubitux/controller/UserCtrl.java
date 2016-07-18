@@ -21,10 +21,12 @@ import java.util.HashMap;
  */
 public class UserCtrl {
 
-    private static void jsonToUser(JSONObject jsonObject, User user) throws ParseException {
+    private static User jsonToUser(JSONObject jsonObject) throws ParseException {
+        User user = new User();
         user.setSession((String) jsonObject.get("session"));
         user.setRole(Role.valueOf((String) jsonObject.get("role")));
         user.setEmail((String) jsonObject.get("email"));
+        user.setLogin((String) jsonObject.get("login"));
         user.setFirstName((String) jsonObject.get("firstname"));
         user.setLastName((String) jsonObject.get("lastname"));
         user.setAddress((String) jsonObject.get("address"));
@@ -35,69 +37,74 @@ public class UserCtrl {
         user.setModified(DateUtil.stringToDate((String) jsonObject.get("modified")));
         user.setLastLogin(DateUtil.stringToDate((String) jsonObject.get("lastlogin")));
         user.setLastAccess(DateUtil.stringToDate((String) jsonObject.get("lastaccess")));
+        return user;
     }
 
     /**
      * Verify an user is already authenticated based on his session string
      *
-     * @param user
      * @return True if session was founded, False otherwise
      * @throws SystemException
      */
-    public static Boolean isAuthenticate(User user) throws SystemException {
-        if (user.getSession() != null) {
-            user.setLogged(false);
-            try {
-                String restUrl = PropertiesUtil.getValue("restUrlIsAuthenticate");
+    public static User isAuthenticate(String session) throws SystemException {
+        // Create new user
+        User user = new User();
+        user.setLogged(false);
+        user.setSession(session);
 
-                // Perform HTTP call
-                HashMap<String, String> arguments = new HashMap<String, String>();
-                arguments.put("session", user.getSession());
+        try {
+            String restUrl = PropertiesUtil.getValue("restUrlIsAuthenticate");
 
-                // Response
-                String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
+            // Perform HTTP call
+            HashMap<String, String> arguments = new HashMap<String, String>();
+            arguments.put("session", session);
 
-                // Parse JSON response
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
-                Long error = (Long) jsonObject.get("error");
-                if (error.intValue() == 0) {
-                    user.setLogged(true);
-                    jsonToUser(jsonObject, user);
-                    return true;
-                }
+            // Response
+            String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
 
-            } catch (IOException ioe) {
-                throw new SystemException(ioe);
-            } catch (org.json.simple.parser.ParseException pe1) {
-                throw new SystemException(pe1);
-            } catch (java.text.ParseException pe2) {
-                throw new SystemException(pe2);
+            // Parse JSON response
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
+            Long error = (Long) jsonObject.get("error");
+            if (error.intValue() == 0) {
+                user = jsonToUser(jsonObject);
+                user.setLogged(true);
             }
+
+        } catch (IOException ioe) {
+            throw new SystemException(ioe);
+        } catch (org.json.simple.parser.ParseException pe1) {
+            throw new SystemException(pe1);
+        } catch (java.text.ParseException pe2) {
+            throw new SystemException(pe2);
         }
 
-        return false;
+        return user;
     }
 
 
     /**
      * Authenticate an user. If user gets authenticate, then it will have session
      *
-     * @param user
+     * @param login
+     * @param password
      * @throws LoginOrPasswordException
      * @throws AccountNotActivatedException
      * @throws SystemException,             Any other exception that is trapped (IO, Parse, etc...)
      */
-    public static void authenticate(User user) throws LoginOrPasswordException, AccountNotActivatedException, SystemException {
-        try {
-            // Reset any existing session
-            user.setLogged(false);
-            user.setSession(null);
+    public static User authenticate(String login, String password) throws LoginOrPasswordException, AccountNotActivatedException, SystemException {
+        // Create new user
+        User user = new User();
+        user.setLogged(false);
+        user.setSession(null);
+        user.setLogin(login);
+        user.setPassword(password);
 
+        try {
             // Perform HTTP call
             HashMap<String, String> arguments = new HashMap<String, String>();
-            arguments.put("login", user.getLogin());
-            arguments.put("password", user.getPassword());
+            arguments.put("login", login);
+            arguments.put("password", password);
 
             // Response
             String restUrl = PropertiesUtil.getValue("restUrlAuthenticate");
@@ -110,8 +117,8 @@ public class UserCtrl {
             Long error = (Long) jsonObject.get("error");
             switch (error.intValue()) {
                 case 0:
+                    user = jsonToUser(jsonObject);
                     user.setLogged(true);
-                    jsonToUser(jsonObject, user);
                     break;
                 case 100:
                 case 102:
@@ -126,39 +133,48 @@ public class UserCtrl {
         } catch (java.text.ParseException pe2) {
             throw new SystemException(pe2);
         }
+        return user;
     }
 
-    public static Boolean logout(User user) throws SystemException {
-        if (user.getSession() != null) {
-            try {
-                String restUrl = PropertiesUtil.getValue("restUrlLogout");
+    /**
+     * Logout any existing session
+     *
+     * @param session
+     * @return
+     * @throws SystemException
+     */
+    public static User logout(String session) throws SystemException {
+        User user = new User();
+        user.setLogged(true);
+        user.setSession(session);
 
-                // Perform HTTP call
-                HashMap<String, String> arguments = new HashMap<String, String>();
-                arguments.put("session", user.getSession());
+        try {
+            String restUrl = PropertiesUtil.getValue("restUrlLogout");
 
-                // Response
-                String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
+            // Perform HTTP call
+            HashMap<String, String> arguments = new HashMap<String, String>();
+            arguments.put("session", user.getSession());
 
-                // Parse JSON response
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
-                Long error = (Long) jsonObject.get("error");
-                if (error.intValue() == 0) {
-                    user.setSession(null);
-                    user.setLogged(false);
-                    return true;
-                }
+            // Response
+            String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
 
-            } catch (IOException ioe) {
-                throw new SystemException(ioe);
-            } catch (org.json.simple.parser.ParseException pe1) {
-                throw new SystemException(pe1);
+            // Parse JSON response
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
+            Long error = (Long) jsonObject.get("error");
+            if (error.intValue() == 0) {
+                user.setSession(null);
+                user.setLogged(false);
             }
+
+        } catch (IOException ioe) {
+            throw new SystemException(ioe);
+        } catch (org.json.simple.parser.ParseException pe1) {
+            throw new SystemException(pe1);
         }
 
-        return false;
-    }
+        return user;
+   }
 
     public static void register(User user) throws Exception {
 

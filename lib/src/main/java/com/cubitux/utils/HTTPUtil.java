@@ -2,6 +2,7 @@ package com.cubitux.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -15,6 +16,19 @@ import java.util.Map;
  * Created by pierre on 2016-06-19.
  */
 public class HTTPUtil {
+
+    /**
+     * Perform HTTP request and return result as a stream
+     *
+     * @param urlStr
+     * @return
+     * @throws IOException
+     */
+    public static InputStream httpStream(String urlStr) throws IOException {
+        URL url = new URL(urlStr);
+        InputStream inputStream = (InputStream) url.getContent();
+        return inputStream;
+    }
 
     /**
      * Perform HTTP POST parameters to an url

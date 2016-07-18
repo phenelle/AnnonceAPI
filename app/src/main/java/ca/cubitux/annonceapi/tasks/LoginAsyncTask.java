@@ -15,15 +15,22 @@ public class LoginAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private User mUser;
 
-    public LoginAsyncTask(Activity activity, User user) {
+    private String mLogin, mPassword;
+
+    public LoginAsyncTask(Activity activity, String login, String password) {
         mActivity = activity;
-        mUser = user;
+        mLogin = login;
+        mPassword = password;
+    }
+
+    public User getUser() {
+        return mUser;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            UserCtrl.authenticate(mUser);
+            mUser = UserCtrl.authenticate(mLogin, mPassword);
         } catch (Exception e) {
             return false;
         }
@@ -35,7 +42,7 @@ public class LoginAsyncTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(success);
         if (mActivity instanceof AsyncTaskListener) {
             AsyncTaskListener asyncTaskListener = (AsyncTaskListener) mActivity;
-            asyncTaskListener.onPostExecute(success);
+            asyncTaskListener.onPostExecute(success, this);
         }
     }
 
