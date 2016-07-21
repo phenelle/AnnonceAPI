@@ -5,7 +5,7 @@
 [![Github Releases](https://img.shields.io/github/release/phenelle/AnnonceAPI.svg)](https://github.com/phenelle/AnnonceAPI/releases)
 
 Latest App Available Here: 
-[app-release.apk](http://annonceapi.cubitux.ca/app-release-unsigned.apk)
+[app-debug.apk](http://annonceapi.cubitux.ca/app-debug.apk)
 
 Latest Lib Available Here: 
 [Lib.jar](http://annonceapi.cubitux.ca/lib.jar)
