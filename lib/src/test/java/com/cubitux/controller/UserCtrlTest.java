@@ -3,6 +3,7 @@ package com.cubitux.controller;
 import com.cubitux.model.Role;
 import com.cubitux.model.User;
 import com.cubitux.model.exception.AccountNotActivatedException;
+import com.cubitux.model.exception.LoginInUseException;
 import com.cubitux.model.exception.LoginOrPasswordException;
 import com.cubitux.utils.DateUtil;
 
@@ -62,6 +63,17 @@ public class UserCtrlTest extends TestCase {
         admin = UserCtrl.isAuthenticate(session);
         assertFalse("admin session is still active", admin.isLogged());
 
+    }
+
+
+    @Test
+    public void testCheckEmail() throws Exception {
+        try {
+            UserCtrl.checkEmailAvailable("admin@localhost");
+        } catch (Exception e) {
+            assertSame("Wrong exception was thrown", e.getClass(), LoginInUseException.class);
+        }
+        UserCtrl.checkEmailAvailable("toto@localhost");
     }
 
     @Test

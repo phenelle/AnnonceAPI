@@ -3,6 +3,7 @@ package com.cubitux.controller;
 import com.cubitux.model.Role;
 import com.cubitux.model.User;
 import com.cubitux.model.exception.AccountNotActivatedException;
+import com.cubitux.model.exception.LoginInUseException;
 import com.cubitux.model.exception.LoginOrPasswordException;
 import com.cubitux.model.exception.SystemException;
 import com.cubitux.utils.DateUtil;
@@ -181,6 +182,41 @@ public class UserCtrl {
     }
 
     public static void edit(User user) throws Exception {
+
+    }
+
+
+    /**
+     * Check if email is available, or throw an exception
+     *
+     * @param email, email address to check
+     * @throws LoginInUseException
+     * @throws SystemException
+     */
+    public static void checkEmailAvailable(String email) throws LoginInUseException, SystemException {
+        try {
+            String restUrl = PropertiesUtil.getValue("restUrlCheckLogin");
+
+            // Perform HTTP call
+            HashMap<String, String> arguments = new HashMap<String, String>();
+            arguments.put("login", email);
+
+            // Response
+            String httpResponse = HTTPUtil.httpPost(restUrl, arguments);
+
+            // Parse JSON response
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(httpResponse);
+            Long error = (Long) jsonObject.get("error");
+            if (error.intValue() == 400) {
+                throw new LoginInUseException();
+            }
+
+        } catch (IOException e) {
+            throw new SystemException(e);
+        } catch (org.json.simple.parser.ParseException e) {
+            throw new SystemException(e);
+        }
 
     }
 
