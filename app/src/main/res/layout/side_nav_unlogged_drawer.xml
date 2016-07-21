@@ -24,6 +24,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/colorPrimary"
         android:enabled="true"
+        android:onClick="signInButtonOnClick"
         android:paddingLeft="48dp"
         android:paddingRight="48dp"
         android:text="Sign in" />

@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,17 +50,40 @@ public class HomeActivity extends Activity
      */
     private LogoutAsyncTask mLogoutTask;
 
+    /**
+     * Load latest annonce task
+     */
     private AnnonceAsyncTask mAnnonceTask;
 
-    private View headerViewLogged, headerViewUnlogged;
-
-    private Menu mMenu;
-
+    /**
+     * NavigationView is the sidebar
+     */
     private NavigationView mNavigationView;
 
+    /**
+     * Header sidebar when logged / unlogged
+     */
+    private View headerViewLogged, headerViewUnlogged;
+
+    /**
+     * Menu of the sidebar
+     */
+    private Menu mMenu;
+
+    /**
+     * List of latest annonce
+     */
     private ListView mListView;
 
-
+    /**
+     * OnClick for the SignIn Button
+     *
+     * @param view
+     */
+    public void signInButtonOnClick(View view) {
+        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+        HomeActivity.this.finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,14 +118,7 @@ public class HomeActivity extends Activity
 
         // Bind click to unlogged HeaderView
         headerViewUnlogged = mNavigationView.getHeaderView(0);
-        Button buttonSignIn = (Button) headerViewUnlogged.findViewById(R.id.sign_in);
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                HomeActivity.this.finish();
-            }
-        });
+
         mMenu = mNavigationView.getMenu();
         mMenu.findItem(R.id.nav_group_profile).setVisible(false);
 
@@ -191,7 +206,7 @@ public class HomeActivity extends Activity
         showProgress(false);
         if (success && asyncTask instanceof LogoutAsyncTask) {
             mUser = ((LogoutAsyncTask) asyncTask).getUser();
-            headerViewLogged = getLayoutInflater().inflate(R.layout.side_nav_unlogged_drawer, mNavigationView);
+            headerViewUnlogged = getLayoutInflater().inflate(R.layout.side_nav_unlogged_drawer, mNavigationView);
             mMenu.findItem(R.id.nav_group_profile).setVisible(false);
             mLogoutTask = null;
         }
