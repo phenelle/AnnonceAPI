@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,21 +20,19 @@ import android.widget.TextView;
 
 import com.cubitux.model.User;
 import com.cubitux.model.annonce.Annonce;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import ca.cubitux.annonceapi.list.AnnonceList;
+import ca.cubitux.annonceapi.adapter.AnnonceAdapter;
 import ca.cubitux.annonceapi.tasks.AnnonceAsyncTask;
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LogoutAsyncTask;
 
 public class HomeActivity extends Activity
         implements NavigationView.OnNavigationItemSelectedListener, AsyncTaskListener {
-
-    /**
-     * Used by the navigation drawer
-     */
-    private TextView mUserFullname, mUserEmail;
 
     /**
      * Current user
@@ -44,6 +43,11 @@ public class HomeActivity extends Activity
      * Latest annonce
      */
     private List<Annonce> mAnnonces;
+
+    /**
+     * Used by the navigation drawer
+     */
+    private TextView mUserFullname, mUserEmail;
 
     /**
      * Logout task
@@ -76,6 +80,11 @@ public class HomeActivity extends Activity
     private ListView mListView;
 
     /**
+     * Annonce Adapter
+     */
+    private AnnonceAdapter mAnnonceAdapter;
+
+    /**
      * OnClick for the SignIn Button
      *
      * @param view
@@ -89,6 +98,10 @@ public class HomeActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
 
         // Custom toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -142,10 +155,16 @@ public class HomeActivity extends Activity
             mUserEmail.setText(mUser.getEmail());
         }
 
+        // Initialize empty listview
+        mListView = (ListView) findViewById(R.id.listView);
+        mAnnonces = new ArrayList<Annonce>();
+        mAnnonceAdapter = new AnnonceAdapter(HomeActivity.this, mAnnonces);
+        mListView.setAdapter(mAnnonceAdapter);
+
+        // Fetch remote annonces
         mAnnonceTask = new AnnonceAsyncTask(this);
         mAnnonceTask.execute((Void) null);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -215,13 +234,13 @@ public class HomeActivity extends Activity
 
             // Load Annonce List
             mAnnonces = ((AnnonceAsyncTask) asyncTask).getAnnonces();
-            AnnonceList adapter = new AnnonceList(HomeActivity.this, mAnnonces);
-            mListView = (ListView) findViewById(R.id.listView);
-            mListView.setAdapter(adapter);
+            mAnnonceAdapter = new AnnonceAdapter(HomeActivity.this, mAnnonces);
+
+            mListView.setAdapter(mAnnonceAdapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    Log.i("HomeActivity", "Click");
                 }
             });
 
