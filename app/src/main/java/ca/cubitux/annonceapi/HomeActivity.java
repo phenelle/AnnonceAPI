@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -178,8 +179,13 @@ public class HomeActivity extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home, menu);
+        if (mUser.isLogged()) {
+            menu.getItem(0).setVisible(true);
+        } else {
+            menu.getItem(0).setVisible(false);
+        }
         return true;
     }
 
@@ -191,7 +197,10 @@ public class HomeActivity extends Activity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.logout) {
+            showProgress(true);
+            mLogoutTask = new LogoutAsyncTask(this, mUser.getSession());
+            mLogoutTask.execute((Void) null);
             return true;
         }
 
@@ -223,19 +232,21 @@ public class HomeActivity extends Activity
     @Override
     public void onPostExecute(Boolean success, AsyncTask asyncTask) {
         showProgress(false);
+
+        // Logout
         if (success && asyncTask instanceof LogoutAsyncTask) {
             mUser = ((LogoutAsyncTask) asyncTask).getUser();
             headerViewUnlogged = getLayoutInflater().inflate(R.layout.side_nav_unlogged_drawer, mNavigationView);
             mMenu.findItem(R.id.nav_group_profile).setVisible(false);
+            invalidateOptionsMenu();
             mLogoutTask = null;
         }
 
+        // Annonce List
         if (success && asyncTask instanceof AnnonceAsyncTask) {
 
-            // Load Annonce List
             mAnnonces = ((AnnonceAsyncTask) asyncTask).getAnnonces();
             mAnnonceAdapter = new AnnonceAdapter(HomeActivity.this, mAnnonces);
-
             mListView.setAdapter(mAnnonceAdapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -243,7 +254,6 @@ public class HomeActivity extends Activity
                     Log.i("HomeActivity", "Click");
                 }
             });
-
             mAnnonceTask = null;
         }
 
