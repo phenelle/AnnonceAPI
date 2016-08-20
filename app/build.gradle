@@ -38,7 +38,6 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
 
     // Additional library for the app
-    compile 'com.sun.mail:javax.mail:1.5.5'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.6'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 

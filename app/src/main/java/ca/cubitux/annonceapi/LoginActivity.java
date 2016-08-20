@@ -31,9 +31,6 @@ import com.cubitux.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LoginAsyncTask;
 
@@ -175,15 +172,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             error = true;
-        } else {
-            try {
-                InternetAddress emailAddr = new InternetAddress(email);
-                emailAddr.validate();
-            } catch (AddressException ex) {
-                mEmailView.setError(getString(R.string.error_invalid_email));
-                focusView = mEmailView;
-                error = true;
-            }
+        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            error = true;
         }
 
         if (error) {
