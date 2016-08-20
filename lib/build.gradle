@@ -16,3 +16,9 @@ task copyTestResources(type: Copy) {
 }
 
 processTestResources.dependsOn copyTestResources
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
