@@ -34,6 +34,12 @@ public class LoginActivityTest {
      * 5 seconds should be enough
      */
     private static final int LAUNCH_TIMEOUT = 5000;
+
+    /**
+     * Wait 1 secondes to find components of the graphical interface
+     */
+    private static final int COMPONENT_TIMEOUT = 1000;
+
     /**
      * Package where to find all classes
      */
@@ -102,7 +108,7 @@ public class LoginActivityTest {
         // Find email field (and it's current state)
         UiObject2 emailTextView = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, emailTextViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Make sure the field was found
         assertThat(emailTextView, notNullValue());
@@ -116,7 +122,7 @@ public class LoginActivityTest {
         // Find "sign in" button and click
         UiObject2 signInButton = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, buttonViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Emulate Click
         signInButton.click();
@@ -126,7 +132,7 @@ public class LoginActivityTest {
         // Find the field (again) and get its updated state
         UiObject2 emailTextViewWithError = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, emailTextViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Make sure the field was found
         assertThat(emailTextViewWithError, notNullValue());
@@ -153,7 +159,7 @@ public class LoginActivityTest {
         // Find "sign in" button and click
         UiObject2 signInButton = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, buttonViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Emulate Click
         signInButton.click();
@@ -166,7 +172,7 @@ public class LoginActivityTest {
         // Find the field (again) and get its updated state
         UiObject2 emailTextViewWithError = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, emailTextViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Make sure the field was found
         assertThat(emailTextViewWithError, notNullValue());
@@ -189,7 +195,7 @@ public class LoginActivityTest {
         // Find "sign in" button and click
         UiObject2 signInButton = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, buttonViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Emulate Click
         signInButton.click();
@@ -202,7 +208,7 @@ public class LoginActivityTest {
         // Find the field (again) and get its updated state
         UiObject2 passwordTextViewWithError = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, passwordTextViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Make sure the field was found
         assertThat(passwordTextViewWithError, notNullValue());
@@ -226,7 +232,7 @@ public class LoginActivityTest {
         // Find email field (and it's current state)
         UiObject2 emailTextView = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, emailTextViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Make sure the field was found
         assertThat(emailTextView, notNullValue());
@@ -239,7 +245,7 @@ public class LoginActivityTest {
         // Find the field (again) and get its updated state
         UiObject2 passwordTextView = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, passwordViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         // Make sure the field was found
         assertThat(passwordTextView, notNullValue());
@@ -252,7 +258,7 @@ public class LoginActivityTest {
         // Find "sign in" button and click
         UiObject2 signInButton = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, buttonViewResId)),
-                        500 /* wait 500ms */);
+                        COMPONENT_TIMEOUT);
 
         assertThat(signInButton, notNullValue());
 
@@ -264,7 +270,7 @@ public class LoginActivityTest {
         final String content = "home_content";
         UiObject2 homeContentView = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, content)),
-                        5000);
+                        LAUNCH_TIMEOUT);
 
         assertThat(homeContentView, notNullValue());
     }
