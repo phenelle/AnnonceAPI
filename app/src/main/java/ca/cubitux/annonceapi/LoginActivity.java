@@ -28,11 +28,11 @@ import android.widget.TextView;
 
 import com.cubitux.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LoginAsyncTask;
+import ca.cubitux.annonceapi.utils.ContactUtils;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -84,7 +84,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
                 return false;
             }
         });
-
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -92,14 +91,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
                 attemptLogin();
             }
         });
-
     }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -237,13 +234,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
+        List<String> emails = ContactUtils.getNameEmailDetails(getApplicationContext());
         addEmailsToAutoComplete(emails);
     }
 
