@@ -121,6 +121,8 @@ public class LoginActivityTest {
     @Test
     public void testInvalidEmail() throws InterruptedException {
 
+        allowPermissionsIfNeeded();
+
         // The field resource identifier
         final String emailTextViewResId = "email";
 
@@ -172,6 +174,8 @@ public class LoginActivityTest {
     @Test
     public void testEmptyEmail() throws InterruptedException {
 
+        allowPermissionsIfNeeded();
+
         // The button resource identifier
         final String buttonViewResId = "email_sign_in_button";
 
@@ -179,6 +183,7 @@ public class LoginActivityTest {
         UiObject2 signInButton = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, buttonViewResId)),
                         COMPONENT_TIMEOUT);
+        assertThat(signInButton, notNullValue());
 
         // Emulate Click
         signInButton.click();
@@ -208,6 +213,8 @@ public class LoginActivityTest {
     @Test
     public void testEmptyPassword() throws InterruptedException {
 
+        allowPermissionsIfNeeded();
+
         // The button resource identifier
         final String buttonViewResId = "email_sign_in_button";
 
@@ -215,6 +222,8 @@ public class LoginActivityTest {
         UiObject2 signInButton = mDevice
                 .wait(Until.findObject(By.res(TARGET_PACKAGE, buttonViewResId)),
                         COMPONENT_TIMEOUT);
+
+        assertThat(signInButton, notNullValue());
 
         // Emulate Click
         signInButton.click();
@@ -244,6 +253,8 @@ public class LoginActivityTest {
 
     @Test
     public void testSuccessfulLogin() throws InterruptedException {
+
+        allowPermissionsIfNeeded();
 
         // The field resource identifier
         final String emailTextViewResId = "email";
