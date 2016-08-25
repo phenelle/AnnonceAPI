@@ -10,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,8 +31,7 @@ import ca.cubitux.annonceapi.tasks.AnnonceAsyncTask;
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LogoutAsyncTask;
 
-public class HomeActivity extends Activity
-        implements NavigationView.OnNavigationItemSelectedListener, AsyncTaskListener {
+public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
 
     /**
      * Current user
@@ -61,21 +59,6 @@ public class HomeActivity extends Activity
     private AnnonceAsyncTask mAnnonceTask;
 
     /**
-     * NavigationView is the sidebar
-     */
-    private NavigationView mNavigationView;
-
-    /**
-     * Header sidebar when logged / unlogged
-     */
-    private View headerViewLogged, headerViewUnlogged;
-
-    /**
-     * Menu of the sidebar
-     */
-    private Menu mMenu;
-
-    /**
      * List of latest annonce
      */
     private ListView mListView;
@@ -85,15 +68,6 @@ public class HomeActivity extends Activity
      */
     private AnnonceAdapter mAnnonceAdapter;
 
-    /**
-     * OnClick for the SignIn Button
-     *
-     * @param view
-     */
-    public void signInButtonOnClick(View view) {
-        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-        HomeActivity.this.finish();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,7 +225,11 @@ public class HomeActivity extends Activity
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.i("HomeActivity", "Click");
+                    // Start new activity
+                    Intent detailActivity = new Intent(HomeActivity.this, DetailActivity.class);
+                    detailActivity.putExtra("Annonce", mAnnonces.get(position));
+                    startActivity(detailActivity);
+                    HomeActivity.this.finish();
                 }
             });
             mAnnonceTask = null;

@@ -169,7 +169,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             error = true;
-        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             error = true;

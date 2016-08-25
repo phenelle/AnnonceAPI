@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 
-
+@Deprecated
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 

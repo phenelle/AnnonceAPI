@@ -9,8 +9,12 @@ import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObject2;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
+import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import org.junit.Before;
@@ -73,6 +77,19 @@ public class LoginActivityTest {
         return error;
     }
 
+    private void allowPermissionsIfNeeded() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            UiObject allowPermissions = mDevice.findObject(new UiSelector().text("Allow"));
+            if (allowPermissions.exists()) {
+                try {
+                    allowPermissions.click();
+                } catch (UiObjectNotFoundException e) {
+                    Log.e("LoginActivityTest", "There is no permissions dialog to interact with ");
+                }
+            }
+        }
+    }
+
     @Before
     public void before() {
         // Initialize UiDevice instance
@@ -96,6 +113,8 @@ public class LoginActivityTest {
 
         // Wait for the app to appear
         mDevice.wait(Until.hasObject(By.pkg(TARGET_ACTIVITY).depth(0)), LAUNCH_TIMEOUT);
+
+        allowPermissionsIfNeeded();
     }
 
 

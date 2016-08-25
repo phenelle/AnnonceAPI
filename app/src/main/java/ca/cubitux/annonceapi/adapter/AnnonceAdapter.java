@@ -44,20 +44,6 @@ public class AnnonceAdapter extends ArrayAdapter<Annonce> {
         title.setText(mAnnonce.getTitle());
         desc.setText(mAnnonce.getDescription());
 
-        // change the icon for Windows and iPhone
-        /*
-        String s = "bbb";
-         */
-        /*
-        if (s.startsWith("iPhone")) {
-            imageView.setImageResource(R.drawable.ic_list);
-        } else {
-            imageView.setImageResource(R.drawable.ic_stars);
-        }
-        */
-        //new DownloadImageTask(imageView).execute(mAnnonce.getImage());
-        //new DownloadImageTask(imageView).execute("http://annonceapi.cubitux.ca/images/annonces/GSX-S750AL6_YSF_D.jpg");
-
         // Get singleton instance
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(mAnnonce.getImage(), imageView);

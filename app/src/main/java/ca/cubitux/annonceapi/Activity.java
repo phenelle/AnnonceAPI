@@ -4,14 +4,17 @@ import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by pierre on 2016-07-17.
+ * Abstract class with common properties to all Activities
  */
-public class Activity extends AppCompatActivity {
+public abstract class Activity extends AppCompatActivity {
 
+    /**
+     * Loading progress dialog
+     */
     private ProgressDialog progressDialog;
 
     /**
-     * Show or hide loading throbber with the default message
+     * Show or hide "loading animation" with the default message
      *
      * @param show
      */
@@ -20,7 +23,7 @@ public class Activity extends AppCompatActivity {
     }
 
     /**
-     * Show or hide loading throbber with a custom message
+     * Show or hide "loading animation" with a custom message
      *
      * @param show
      * @param message
