@@ -1,7 +1,6 @@
 package ca.cubitux.annonceapi;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,7 +8,7 @@ import com.cubitux.model.annonce.Annonce;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends Activity {
 
     /**
      * Annonce to display
@@ -31,6 +30,7 @@ public class DetailActivity extends AppCompatActivity {
         if (mAnnonce != null) {
             // Load main image
             ImageView imageView = (ImageView) this.findViewById(R.id.image);
+            imageView.setImageResource(android.R.color.transparent);
             ImageLoader imageLoader = ImageLoader.getInstance();
             imageLoader.displayImage(mAnnonce.getImage(), imageView);
 

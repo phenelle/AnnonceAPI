@@ -1,6 +1,7 @@
 package ca.cubitux.annonceapi.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class AnnonceAdapter extends ArrayAdapter<Annonce> {
         TextView title = (TextView) rowView.findViewById(R.id.title);
         TextView desc = (TextView) rowView.findViewById(R.id.description);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.image);
+        imageView.setBackgroundColor(Color.WHITE);
 
         Annonce mAnnonce = mAnnonces.get(position);
 

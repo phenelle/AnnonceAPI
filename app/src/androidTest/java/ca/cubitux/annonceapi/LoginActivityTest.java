@@ -48,10 +48,12 @@ public class LoginActivityTest {
      * Package where to find all classes
      */
     private final String TARGET_PACKAGE = "ca.cubitux.annonceapi";
+
     /**
      * Path to the Activity
      */
     private final String TARGET_ACTIVITY = "ca.cubitux.annonceapi.LoginActivity";
+
     /**
      * Our virtual device
      */
@@ -111,10 +113,11 @@ public class LoginActivityTest {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 
+        allowPermissionsIfNeeded();
+
         // Wait for the app to appear
         mDevice.wait(Until.hasObject(By.pkg(TARGET_ACTIVITY).depth(0)), LAUNCH_TIMEOUT);
 
-        allowPermissionsIfNeeded();
     }
 
 

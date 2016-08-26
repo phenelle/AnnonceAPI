@@ -10,6 +10,7 @@ import com.cubitux.model.User;
 
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.IsAuthAsyncTask;
+import ca.cubitux.annonceapi.utils.DataHolder;
 
 /**
  * Created by pierre on 2016-07-10.
@@ -29,15 +30,12 @@ public class SplashActivity extends Activity implements AsyncTaskListener {
     /**
      * Current user
      */
-    private User mUser;
+    private User mUser = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        // Create an empty user
-        mUser = new User();
 
         // Allow to see the splash screen for 1 second
         Thread splashTimer = new Thread() {
@@ -78,8 +76,12 @@ public class SplashActivity extends Activity implements AsyncTaskListener {
         Intent homeActivity = new Intent(this, HomeActivity.class);
 
         mUser = ((IsAuthAsyncTask) asyncTask).getUser();
+
+        DataHolder.getInstance().setUser(mUser);
+
         // Pass mUser and then start Activity
-        homeActivity.putExtra("User", mUser);
+        //homeActivity.putExtra("User", mUser);
+
         startActivity(homeActivity);
 
         // close current activity

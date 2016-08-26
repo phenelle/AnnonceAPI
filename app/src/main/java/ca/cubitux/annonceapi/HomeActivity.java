@@ -23,13 +23,13 @@ import com.cubitux.model.annonce.Annonce;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.cubitux.annonceapi.adapter.AnnonceAdapter;
 import ca.cubitux.annonceapi.tasks.AnnonceAsyncTask;
 import ca.cubitux.annonceapi.tasks.AsyncTaskListener;
 import ca.cubitux.annonceapi.tasks.LogoutAsyncTask;
+import ca.cubitux.annonceapi.utils.DataHolder;
 
 public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
 
@@ -80,7 +80,7 @@ public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
 
         // Custom toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home - AnnonceAPI");
+        toolbar.setTitle(getString(R.string.title_home_activity));
         setSupportActionBar(toolbar);
 
         // Floating button (right bottom corner)
@@ -110,10 +110,9 @@ public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
         mMenu = mNavigationView.getMenu();
         mMenu.findItem(R.id.nav_group_profile).setVisible(false);
 
-        // Get currently logged user
-        Bundle extras = getIntent().getExtras();
-        mUser = (User) extras.getSerializable("User");
-        if (mUser != null && mUser.isLogged()) {
+
+        mUser = DataHolder.getInstance().getUser();
+        if (mUser.isLogged()) {
 
             // Inflate logged HeaderView
             headerViewLogged = getLayoutInflater().inflate(R.layout.side_nav_logged_drawer, mNavigationView);
@@ -129,10 +128,11 @@ public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
             mUserEmail = (TextView) headerViewLogged.findViewById(R.id.userEmail);
             mUserEmail.setText(mUser.getEmail());
         }
+        //}
 
         // Initialize empty listview
         mListView = (ListView) findViewById(R.id.listView);
-        mAnnonces = new ArrayList<Annonce>();
+        mAnnonces = DataHolder.getInstance().getAnnonces();
         mAnnonceAdapter = new AnnonceAdapter(HomeActivity.this, mAnnonces);
         mListView.setAdapter(mAnnonceAdapter);
 
@@ -155,7 +155,7 @@ public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
-        if (mUser.isLogged()) {
+        if (mUser != null && mUser.isLogged()) {
             menu.getItem(0).setVisible(true);
         } else {
             menu.getItem(0).setVisible(false);
@@ -220,6 +220,7 @@ public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
         if (success && asyncTask instanceof AnnonceAsyncTask) {
 
             mAnnonces = ((AnnonceAsyncTask) asyncTask).getAnnonces();
+            DataHolder.getInstance().setAnnonces(mAnnonces);
             mAnnonceAdapter = new AnnonceAdapter(HomeActivity.this, mAnnonces);
             mListView.setAdapter(mAnnonceAdapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -229,7 +230,7 @@ public class HomeActivity extends DrawerActivity implements AsyncTaskListener {
                     Intent detailActivity = new Intent(HomeActivity.this, DetailActivity.class);
                     detailActivity.putExtra("Annonce", mAnnonces.get(position));
                     startActivity(detailActivity);
-                    HomeActivity.this.finish();
+                    //HomeActivity.this.finish();
                 }
             });
             mAnnonceTask = null;

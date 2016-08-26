@@ -13,6 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="title_home_activity">Home - AnnonceAPI</string>
+
     <string name="title_activity_main">MainActivity</string>
     <string name="congratluations">Congratulation!</string>
     <string name="quit">Quit</string>
